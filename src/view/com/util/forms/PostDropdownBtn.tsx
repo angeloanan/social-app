@@ -7,6 +7,7 @@ import {
   type ViewStyle,
 } from 'react-native'
 import * as Clipboard from 'expo-clipboard'
+import {setStringAsync} from 'expo-clipboard'
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
@@ -261,6 +262,10 @@ let PostDropdownBtn = ({
     const url = toShareUrl(href)
     shareUrl(url)
   }, [href])
+  const onCopyPostUri = React.useCallback(() => {
+    setStringAsync(postUri)
+    Toast.show(_(msg`Copied to clipboard`), 'clipboard-check')
+  }, [_, postUri])
 
   const onPressShowMore = React.useCallback(() => {
     feedFeedback.sendInteraction({
@@ -461,6 +466,13 @@ let PostDropdownBtn = ({
                 {isWeb ? _(msg`Copy link to post`) : _(msg`Share`)}
               </Menu.ItemText>
               <Menu.ItemIcon icon={Share} position="right" />
+            </Menu.Item>
+            <Menu.Item
+              testID="postDropdownCopyUriBtn"
+              label={_(msg`Copy post atproto URI`)}
+              onPress={onCopyPostUri}>
+              <Menu.ItemText>{_(msg`Copy atproto URI`)}</Menu.ItemText>
+              {/* <Menu.ItemIcon icon={Share} position="right" /> */}
             </Menu.Item>
 
             {canEmbed && (
