@@ -33,6 +33,10 @@ import {isNative} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
 import {clearStorage} from '#/state/persisted'
 import {
+  useDeveloperOption,
+  useSetDeveloperOption,
+} from '#/state/preferences/developer-option'
+import {
   useInAppBrowser,
   useSetInAppBrowser,
 } from '#/state/preferences/in-app-browser'
@@ -157,6 +161,8 @@ export function SettingsScreen({}: Props) {
   const birthdayControl = useDialogControl()
   const {pendingDid, onPressSwitchAccount} = useAccountSwitcher()
   const isSwitchingAccounts = !!pendingDid
+  const isDeveloperOptionEnabled = useDeveloperOption()
+  const setDeveloperOption = useSetDeveloperOption()
 
   // const primaryBg = useCustomPalette<ViewStyle>({
   //   light: {backgroundColor: colors.blue0},
@@ -707,6 +713,15 @@ export function SettingsScreen({}: Props) {
             />
           </View>
         )}
+        <View style={[pal.view, styles.toggleCard]}>
+          <ToggleButton
+            type="default-light"
+            label={_(msg`Enable developer options`)}
+            labelType="lg"
+            isSelected={isDeveloperOptionEnabled}
+            onPress={() => setDeveloperOption(!isDeveloperOptionEnabled)}
+          />
+        </View>
         <View style={styles.spacer20} />
         <Text type="xl-bold" style={[pal.text, styles.heading]}>
           <Trans>Two-factor authentication</Trans>
