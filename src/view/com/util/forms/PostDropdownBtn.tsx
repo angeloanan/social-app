@@ -35,6 +35,7 @@ import {Shadow} from '#/state/cache/post-shadow'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useHiddenPosts, useHiddenPostsApi} from '#/state/preferences'
+import {useDeveloperOption} from '#/state/preferences/developer-option'
 import {usePinnedPostMutation} from '#/state/queries/pinned-post'
 import {
   usePostDeleteMutation,
@@ -130,6 +131,7 @@ let PostDropdownBtn = ({
   const hideReplyConfirmControl = useDialogControl()
   const {mutateAsync: toggleReplyVisibility} =
     useToggleReplyVisibilityMutation()
+  const isDeveloperOptionOn = useDeveloperOption()
 
   const postUri = post.uri
   const postCid = post.cid
@@ -262,6 +264,10 @@ let PostDropdownBtn = ({
     const url = toShareUrl(href)
     shareUrl(url)
   }, [href])
+  const onCopyPostCid = React.useCallback(() => {
+    setStringAsync(postCid)
+    Toast.show(_(msg`Copied to clipboard`), 'clipboard-check')
+  }, [_, postCid])
   const onCopyPostUri = React.useCallback(() => {
     setStringAsync(postUri)
     Toast.show(_(msg`Copied to clipboard`), 'clipboard-check')
@@ -467,13 +473,6 @@ let PostDropdownBtn = ({
               </Menu.ItemText>
               <Menu.ItemIcon icon={Share} position="right" />
             </Menu.Item>
-            <Menu.Item
-              testID="postDropdownCopyUriBtn"
-              label={_(msg`Copy post atproto URI`)}
-              onPress={onCopyPostUri}>
-              <Menu.ItemText>{_(msg`Copy atproto URI`)}</Menu.ItemText>
-              {/* <Menu.ItemIcon icon={Share} position="right" /> */}
-            </Menu.Item>
 
             {canEmbed && (
               <Menu.Item
@@ -670,6 +669,24 @@ let PostDropdownBtn = ({
                   </>
                 )}
               </Menu.Group>
+            </>
+          )}
+
+          {isDeveloperOptionOn && (
+            <>
+              <Menu.Divider />
+              <Menu.Item
+                testID="postDropdownCopyPostUriBtn"
+                label={_(msg`Copy post URI`)}
+                onPress={onCopyPostUri}>
+                <Menu.ItemText>{_(msg`Copy post URI`)}</Menu.ItemText>
+              </Menu.Item>
+              <Menu.Item
+                testID="postDropdownCopyPostCidBtn"
+                label={_(msg`Copy post CID`)}
+                onPress={onCopyPostCid}>
+                <Menu.ItemText>{_(msg`Copy post CID`)}</Menu.ItemText>
+              </Menu.Item>
             </>
           )}
         </Menu.Outer>
