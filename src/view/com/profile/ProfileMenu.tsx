@@ -1,4 +1,5 @@
 import React, {memo} from 'react'
+import {setStringAsync} from 'expo-clipboard'
 import {AppBskyActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -79,6 +80,11 @@ let ProfileMenu = ({
   const onPressShare = React.useCallback(() => {
     shareUrl(toShareUrl(makeProfileLink(profile)))
   }, [profile])
+
+  const onPressCopyDID = React.useCallback(() => {
+    setStringAsync(profile.did)
+    Toast.show(_(msg`Copied to clipboard`), 'clipboard-check')
+  }, [_, profile])
 
   const onPressAddRemoveLists = React.useCallback(() => {
     openModal({
@@ -204,6 +210,16 @@ let ProfileMenu = ({
                 <Trans>Share</Trans>
               </Menu.ItemText>
               <Menu.ItemIcon icon={Share} />
+            </Menu.Item>
+            <Menu.Item
+              testID="profileHeaderDropdownCopyDIDBtn"
+              label={_(msg`Copy DID`)}
+              onPress={() => {
+                onPressCopyDID()
+              }}>
+              <Menu.ItemText>
+                <Trans>Copy DID</Trans>
+              </Menu.ItemText>
             </Menu.Item>
           </Menu.Group>
 
