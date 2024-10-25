@@ -2,6 +2,7 @@ import React from 'react'
 
 import {Provider as AltTextRequiredProvider} from './alt-text-required'
 import {Provider as AutoplayProvider} from './autoplay'
+import {Provider as DeveloperOptionProvider} from './developer-option'
 import {Provider as DisableHapticsProvider} from './disable-haptics'
 import {Provider as ExternalEmbedsProvider} from './external-embeds-prefs'
 import {Provider as HiddenPostsProvider} from './hidden-posts'
@@ -39,7 +40,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
                   <AutoplayProvider>
                     <UsedStarterPacksProvider>
                       <SubtitlesProvider>
-                        <KawaiiProvider>{children}</KawaiiProvider>
+                        <KawaiiProvider>
+                          <DeveloperOptionProvider>
+                            {children}
+                          </DeveloperOptionProvider>
+                        </KawaiiProvider>
                       </SubtitlesProvider>
                     </UsedStarterPacksProvider>
                   </AutoplayProvider>
