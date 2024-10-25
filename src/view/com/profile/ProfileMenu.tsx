@@ -12,6 +12,7 @@ import {toShareUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {Shadow} from '#/state/cache/types'
 import {useModalControls} from '#/state/modals'
+import {useDeveloperOption} from '#/state/preferences/developer-option'
 import {
   RQKEY as profileQueryKey,
   useProfileBlockMutationQueue,
@@ -53,6 +54,7 @@ let ProfileMenu = ({
   const isBlocked = profile.viewer?.blocking || profile.viewer?.blockedBy
   const isFollowingBlockedAccount = isFollowing && isBlocked
   const isLabelerAndNotBlocked = !!profile.associated?.labeler && !isBlocked
+  const isDeveloperOptionOn = useDeveloperOption()
 
   const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
@@ -211,16 +213,6 @@ let ProfileMenu = ({
               </Menu.ItemText>
               <Menu.ItemIcon icon={Share} />
             </Menu.Item>
-            <Menu.Item
-              testID="profileHeaderDropdownCopyDIDBtn"
-              label={_(msg`Copy DID`)}
-              onPress={() => {
-                onPressCopyDID()
-              }}>
-              <Menu.ItemText>
-                <Trans>Copy DID</Trans>
-              </Menu.ItemText>
-            </Menu.Item>
           </Menu.Group>
 
           {hasSession && (
@@ -321,6 +313,22 @@ let ProfileMenu = ({
                     </Menu.Item>
                   </>
                 )}
+              </Menu.Group>
+            </>
+          )}
+
+          {isDeveloperOptionOn && (
+            <>
+              <Menu.Divider />
+              <Menu.Group>
+                <Menu.Item
+                  testID="profileHeaderDropdownCopyDIDBtn"
+                  label={_(msg`Copy Profile DID`)}
+                  onPress={onPressCopyDID}>
+                  <Menu.ItemText>
+                    <Trans>Copy Profile DID</Trans>
+                  </Menu.ItemText>
+                </Menu.Item>
               </Menu.Group>
             </>
           )}
